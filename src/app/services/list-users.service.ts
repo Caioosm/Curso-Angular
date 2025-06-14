@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
 import { IUsuario } from '../models/iusuario';
 
 @Injectable({
@@ -13,6 +13,10 @@ export class ListUsersService {
   apiURL = 'https://reqres.in/api/';
 
   listarUsuarios(): Observable<IUsuario[]> {
-    return this.http.get<IUsuario[]>(this.apiURL + 'users?page2');
+    const headers = new HttpHeaders({
+      'x-api-key': 'reqres-free-v1',
+    })
+    return this.http.get<{data: IUsuario[]}>(this.apiURL + 'users?page2', { headers })
+        .pipe(map( (response) => response.data));
   }
 }
